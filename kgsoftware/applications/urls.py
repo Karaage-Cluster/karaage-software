@@ -15,8 +15,5 @@
 # You should have received a copy of the GNU General Public License
 # along with Karaage  If not, see <http://www.gnu.org/licenses/>.
 
-from karaage.plugins import BasePlugin
-
-
-class plugin(BasePlugin):
-    name = "kgsoftware"
+from .views import register as register_software
+register_software()

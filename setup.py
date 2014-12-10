@@ -77,6 +77,7 @@ setup(
         '': ['*.css', '*.html', '*.js', '*.png', '*.gif', '*.map', '*.txt'],
     },
     install_requires=[
+        "Django >= 1.7",
         'karaage >= 3.1.2',
         'karaage-applications',
     ],

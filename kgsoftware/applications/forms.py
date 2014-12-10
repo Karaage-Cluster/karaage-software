@@ -15,8 +15,13 @@
 # You should have received a copy of the GNU General Public License
 # along with Karaage  If not, see <http://www.gnu.org/licenses/>.
 
-from karaage.plugins import BasePlugin
+from django import forms
+
+from .models import SoftwareApplication
 
 
-class plugin(BasePlugin):
-    name = "kgsoftware"
+class ApproveSoftwareForm(forms.ModelForm):
+
+    class Meta:
+        model = SoftwareApplication
+        fields = []

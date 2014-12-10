@@ -19,4 +19,6 @@ from karaage.plugins import BasePlugin
 
 
 class plugin(BasePlugin):
-    name = "kgsoftware"
+    name = "kgsoftware.applications"
+    label = "kgsoftware.applications"
+    depends = ("kgapplications.plugin", "kgsoftware.plugin", )

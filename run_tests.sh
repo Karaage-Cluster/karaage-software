@@ -7,7 +7,7 @@ cd $DIR
 if [ -n "$*" ]; then
     TESTS="$@"
 else
-    TESTS="kgsoftware.tests"
+    TESTS="kgsoftware"
 fi
 
 echo ""
@@ -30,7 +30,8 @@ echo "############################"
 echo ""
 echo "TESTS - Python 2"
 echo "############################"
-python2 ./manage.py test --settings=kgsoftware.tests.settings -v 2 $TESTS
+python2 ./manage.py test --settings=kgsoftware.tests.settings -v 2 kgsoftware.tests
+python2 ./manage.py test --settings=kgsoftware.applications.tests.settings -v 2 $TESTS
 if [ ! $? -eq 0 ]
 then
     RETURN=1
@@ -39,7 +40,8 @@ fi
 echo ""
 echo "TESTS - Python 3"
 echo "############################"
-python3 ./manage.py test --settings=kgsoftware.tests.settings -v 2 $TESTS
+python3 ./manage.py test --settings=kgsoftware.tests.settings -v 2 kgsoftware.tests
+python3 ./manage.py test --settings=kgsoftware.applications.tests.settings -v 2 $TESTS
 if [ ! $? -eq 0 ]
 then
     RETURN=1

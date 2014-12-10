@@ -17,11 +17,8 @@
 
 from django.conf.urls import patterns, url, include
 
-from .views.applications import register as register_software
-register_software()
-
 urlpatterns = patterns(
-    'kgsoftware.views.software',
+    'kgsoftware.views',
     url(r'^$', 'software_list', name='kg_software_list'),
     url(r'^add/$', 'add_package', name='kg_software_add'),
 
@@ -74,6 +71,6 @@ urlpatterns = patterns(
 )
 
 profile_urlpatterns = patterns(
-    'kgsoftware.views.software',
+    'kgsoftware.views',
     url(r'^software/$', 'profile_software', name='kg_profile_software'),
 )

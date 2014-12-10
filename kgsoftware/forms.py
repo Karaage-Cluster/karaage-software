@@ -25,7 +25,6 @@ from karaage.machines.models import Machine
 
 from .models import SoftwareCategory, Software
 from .models import SoftwareVersion, SoftwareLicense
-from .models import SoftwareApplication
 
 
 class SoftwareForm(forms.Form):
@@ -130,10 +129,3 @@ class SoftwareVersionForm(forms.ModelForm):
     class Meta:
         model = SoftwareVersion
         fields = ['software', 'version', 'machines', 'module', 'last_used']
-
-
-class ApproveSoftwareForm(forms.ModelForm):
-
-    class Meta:
-        model = SoftwareApplication
-        fields = []

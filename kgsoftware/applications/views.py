@@ -26,8 +26,8 @@ from karaage.people.models import Person
 
 from kgapplications.views import base, states
 
-from ..forms import ApproveSoftwareForm
-from ..models import SoftwareApplication
+from .forms import ApproveSoftwareForm
+from .models import SoftwareApplication
 
 
 class StateIntroduction(base.State):

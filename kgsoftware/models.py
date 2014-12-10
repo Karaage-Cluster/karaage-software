@@ -15,9 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Karaage  If not, see <http://www.gnu.org/licenses/>.
 
-import six
-import datetime
-
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -26,8 +23,6 @@ from model_utils import FieldTracker
 from karaage.people.models import Person, Group
 from karaage.machines.models import Machine
 from karaage.common import log
-
-from kgapplications.models import Application, ApplicationManager
 
 
 @python_2_unicode_compatible
@@ -161,43 +156,3 @@ class SoftwareLicenseAgreement(models.Model):
     class Meta:
         db_table = 'software_license_agreement'
         get_latest_by = 'date'
-
-
-class SoftwareApplication(Application):
-    type = "software"
-    software_license = models.ForeignKey(SoftwareLicense)
-
-    objects = ApplicationManager()
-
-    class Meta:
-        db_table = 'applications_softwareapplication'
-
-    def info(self):
-        return six.u("access software %s") % self.software_license.software
-
-    def check_valid(self):
-        errors = super(SoftwareApplication, self).check_valid()
-
-        if self.content_type.model != 'person':
-            errors.append("Applicant not already registered person.")
-
-        return errors
-
-    def approve(self, approved_by):
-        created_person = super(SoftwareApplication, self).approve(approved_by)
-
-        try:
-            sla = SoftwareLicenseAgreement.objects.get(
-                person=self.applicant,
-                license=self.software_license,
-            )
-        except SoftwareLicenseAgreement.DoesNotExist:
-            sla = SoftwareLicenseAgreement()
-            sla.person = self.applicant
-            sla.license = self.software_license
-            sla.date = datetime.datetime.today()
-            sla.save()
-
-        if self.software_license.software.group is not None:
-            self.software_license.software.group.add_person(self.applicant)
-        return created_person

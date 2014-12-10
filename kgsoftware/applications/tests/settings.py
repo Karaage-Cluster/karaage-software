@@ -15,8 +15,16 @@
 # You should have received a copy of the GNU General Public License
 # along with Karaage  If not, see <http://www.gnu.org/licenses/>.
 
-from karaage.plugins import BasePlugin
+from karaage.conf.defaults import *  # NOQA
+from karaage.tests.defaults import *  # NOQA
 
+PLUGINS = [
+    'kgsoftware.plugin',
+    'kgsoftware.applications.plugin',
+]
+DEBUG = False
+ALLOWED_HOSTS = ["localhost"]
 
-class plugin(BasePlugin):
-    name = "kgsoftware"
+import sys
+from karaage.conf.process import post_process
+post_process(sys.modules[__name__])
