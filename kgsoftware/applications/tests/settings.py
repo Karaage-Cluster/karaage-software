@@ -19,7 +19,6 @@ from karaage.conf.defaults import *  # NOQA
 from karaage.tests.defaults import *  # NOQA
 
 PLUGINS = [
-    'kgsoftware.plugin',
     'kgsoftware.applications.plugin',
 ]
 DEBUG = False

@@ -1,0 +1,7 @@
+karaage3-software (3.1.5-1) unstable; urgency=low
+
+ Software applications have now been split out. Please add
+ kgsoftware.applications.plugins to the PLUGINS settings if you still require
+ this feature.
+
+ -- Brian May <bam@debian.org>  Wed, 17 Dec 2014 13:41:32 +1100
