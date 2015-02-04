@@ -25,14 +25,12 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.contrib import messages
 from django.core.urlresolvers import reverse
-from django.db.models import Count, Sum
 from django.template.defaultfilters import wordwrap
 from django.apps import apps
 
 from karaage.common.decorators import admin_required, login_required
 from karaage.people.models import Person
-from karaage.institutes.models import Institute
-from karaage.common import get_date_range, log
+from karaage.common import log
 import karaage.common as util
 
 from .models import SoftwareCategory, Software, SoftwareVersion
@@ -390,80 +388,6 @@ def remove_member(request, software_id, person_id):
     return render_to_response(
         'kgsoftware/person_confirm_remove.html',
         locals(),
-        context_instance=RequestContext(request))
-
-
-@admin_required
-def software_stats(request, software_id):
-    software = get_object_or_404(Software, pk=software_id)
-    start, end = get_date_range(request)
-    querystring = request.META.get('QUERY_STRING', '')
-    if software.softwareversion_set.count() == 1:
-        sv = software.softwareversion_set.all()[0]
-        url = reverse('kg_software_version_stats', args=[sv.id])
-        return HttpResponseRedirect(url)
-    version_stats = SoftwareVersion.objects \
-        .filter(software=software, cpujob__date__range=(start, end)) \
-        .annotate(jobs=Count('cpujob'), usage=Sum('cpujob__cpu_usage')) \
-        .filter(usage__isnull=False)
-    version_totaljobs = version_stats.aggregate(Sum('jobs'))['jobs__sum']
-    # version_totalusage = version_stats.aggregate(Sum('usage'))
-    person_stats = Person.objects \
-        .filter(account__cpujob__software__software=software,
-                account__cpujob__date__range=(start, end)) \
-        .annotate(jobs=Count('account__cpujob'),
-                  usage=Sum('account__cpujob__cpu_usage'))
-    institute_stats = Institute.objects \
-        .filter(person__account__cpujob__software__software=software,
-                person__account__cpujob__date__range=(start, end)) \
-        .annotate(jobs=Count('person__account__cpujob'),
-                  usage=Sum('person__account__cpujob__cpu_usage'))
-
-    context = {
-        'software': software,
-        'version_stats': version_stats,
-        'version_totaljobs': version_totaljobs,
-        'person_stats': person_stats,
-        'institute_stats': institute_stats,
-        'start': start,
-        'end': end,
-        'querystring': querystring,
-    }
-    return render_to_response(
-        'kgsoftware/software_stats.html',
-        context,
-        context_instance=RequestContext(request))
-
-
-@admin_required
-def version_stats(request, version_id):
-    version = get_object_or_404(SoftwareVersion, pk=version_id)
-    start, end = get_date_range(request)
-    querystring = request.META.get('QUERY_STRING', '')
-
-    person_stats = Person.objects \
-        .filter(account__cpujob__software=version,
-                account__cpujob__date__range=(start, end)) \
-        .annotate(jobs=Count('account__cpujob'),
-                  usage=Sum('account__cpujob__cpu_usage'))
-    institute_stats = Institute.objects \
-        .filter(person__account__cpujob__software=version,
-                person__account__cpujob__date__range=(start, end)) \
-        .annotate(jobs=Count('person__account__cpujob'),
-                  usage=Sum('person__account__cpujob__cpu_usage'))
-
-    context = {
-        'version': version,
-        'person_stats': person_stats,
-        'institute_stats': institute_stats,
-        'start': start,
-        'end': end,
-        'querystring': querystring,
-    }
-
-    return render_to_response(
-        'kgsoftware/version_stats.html',
-        context,
         context_instance=RequestContext(request))
 
 
