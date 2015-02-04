@@ -22,7 +22,7 @@ import django_tables2 as tables
 
 from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db.models import Count, Sum
@@ -77,10 +77,10 @@ else:
         return False
 
     def get_applications(software_license):
-        return None
+        return []
 
     def get_applications_for_person(person, software_license):
-        return None
+        return []
 
     def get_application_table(request, applications):
         return None
@@ -224,7 +224,7 @@ def software_edit(request, software_id):
 def software_delete(request, software_id):
     from karaage.common.create_update import delete_object
     return delete_object(
-        request, post_delete_redirect=reverse('software_list'),
+        request, post_delete_redirect=reverse('kg_software_list'),
         object_id=software_id, model=Software)
 
 
@@ -473,6 +473,9 @@ def license_txt(request, software_id):
     software = get_object_or_404(Software, pk=software_id)
     software_license = software.get_current_license()
 
+    if software_license is None:
+        raise Http404('No license found for software')
+
     return HttpResponse(
         wordwrap(software_license.text, 80),
-        mimetype="text/plain")
+        content_type="text/plain")
