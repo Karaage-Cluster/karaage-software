@@ -1,4 +1,4 @@
-# Copyright 2007-2014 VPAC
+# Copyright 2007-2015 VPAC
 #
 # This file is part of Karaage.
 #
@@ -40,7 +40,7 @@ def set_no_admin():
 class SoftwareApplicationTestCase(TestCase):
 
     def setUp(self):
-        call_command('loaddata', 'karaage_data', **{'verbosity': 0})
+        call_command('loaddata', 'test_karaage', **{'verbosity': 0})
 
     def tearDown(self):
         set_admin()
